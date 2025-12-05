@@ -1,0 +1,53 @@
+#include <stdio.h>
+
+int findOptimal(int pages[], int frame[], int f, int n, int index){
+    int pos = -1, far = index;
+    for(int i=0;i<f;i++){
+        int j;
+        for(j=index;j<n;j++)
+            if(frame[i] == pages[j])
+                break;
+        if(j == n) return i;
+        if(j > far){
+            far = j;
+            pos = i;
+        }
+    }
+    return (pos == -1) ? 0 : pos;
+}
+
+int main(){
+    int pages[20], frame[10], n, f, faults = 0;
+
+    printf("Enter number of pages: ");
+    scanf("%d",&n);
+    printf("Enter pages: ");
+    for(int i=0;i<n;i++) scanf("%d",&pages[i]);
+    printf("Enter frame size: ");
+    scanf("%d",&f);
+
+    for(int i=0;i<f;i++) frame[i] = -1;
+
+    for(int i=0;i<n;i++){
+        int found = 0;
+        for(int j=0;j<f;j++)
+            if(frame[j] == pages[i]) found = 1;
+
+        if(!found){
+            int pos = -1;
+            for(int k=0;k<f;k++)
+                if(frame[k] == -1){ pos = k; break; }
+            if(pos == -1) pos = findOptimal(pages, frame, f, n, i+1);
+
+            frame[pos] = pages[i];
+            faults++;
+        }
+
+        printf("Frames: ");
+        for(int k=0;k<f;k++) printf("%d ", frame[k]);
+        printf("\n");
+    }
+
+    printf("Page Faults = %d\n", faults);
+    return 0;
+}
