@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+int main() {
+    int block[50] = {0}, n, start, len;
+
+    printf("Enter number of blocks to allocate: ");
+    scanf("%d", &n);
+
+    while(n--) {
+        printf("Enter start block and length: ");
+        scanf("%d %d", &start, &len);
+
+        int free = 1;
+        for(int i=start; i < start+len; i++)
+            if(block[i] == 1) free = 0;
+
+        if(free){
+            for(int i=start; i < start+len; i++)
+                block[i] = 1;
+            printf("File allocated.\n");
+        } else {
+            printf("Cannot allocate (blocks not free)\n");
+        }
+    }
+    return 0;
+}
