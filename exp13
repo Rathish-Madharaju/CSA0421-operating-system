@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+int findLRU(int time[], int f) {
+    int min = time[0], pos = 0;
+    for(int i=1;i<f;i++)
+        if(time[i] < min) { min = time[i]; pos = i; }
+    return pos;
+}
+
+int main() {
+    int pages[20], n, f, frame[10], time[10], count = 0, faults = 0;
+
+    printf("Enter number of pages: ");
+    scanf("%d", &n);
+    printf("Enter pages: ");
+    for(int i=0;i<n;i++) scanf("%d",&pages[i]);
+    printf("Enter frame size: ");
+    scanf("%d",&f);
+
+    for(int i=0;i<f;i++) frame[i] = -1;
+
+    for(int i=0;i<n;i++){
+        int found = 0;
+        for(int j=0;j<f;j++){
+            if(frame[j] == pages[i]) {
+                time[j] = ++count;
+                found = 1;
+            }
+        }
+
+        if(!found){
+            int pos = -1;
+            for(int j=0;j<f;j++)
+                if(frame[j] == -1){ pos = j; break; }
+
+            if(pos == -1) pos = findLRU(time, f);
+
+            frame[pos] = pages[i];
+            time[pos] = ++count;
+            faults++;
+        }
+
+        printf("Frames: ");
+        for(int k=0;k<f;k++) printf("%d ", frame[k]);
+        printf("\n");
+    }
+
+    printf("Page Faults = %d\n", faults);
+    return 0;
+}
