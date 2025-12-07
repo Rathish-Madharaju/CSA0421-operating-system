@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <string.h>
+
+struct directory {
+    char name[20];
+    char files[20][20];
+    int fileCount;
+} dir[10];
+
+int main() {
+    int userCount, choice, u, i;
+    char fname[20];
+
+    printf("Enter number of users: ");
+    scanf("%d", &userCount);
+
+    for(i=0;i<userCount;i++){
+        printf("Enter user %d directory name: ", i+1);
+        scanf("%s", dir[i].name);
+        dir[i].fileCount = 0;
+    }
+
+    while(1) {
+        printf("\n1.Create File\n2.Search File\n3.Display Directory\n4.Exit\n");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter user number: ");
+                scanf("%d", &u);
+                printf("Enter file name: ");
+                scanf("%s", dir[u-1].files[dir[u-1].fileCount++]);
+                break;
+
+            case 2:
+                printf("Enter user number: ");
+                scanf("%d", &u);
+                printf("Enter file name: ");
+                scanf("%s", fname);
+                for(i=0;i<dir[u-1].fileCount;i++){
+                    if(strcmp(dir[u-1].files[i], fname)==0){
+                        printf("File found\n");
+                        break;
+                    }
+                }
+                break;
+
+            case 3:
+                for(i=0;i<userCount;i++){
+                    printf("User %s files:\n", dir[i].name);
+                    for(int j=0;j<dir[i].fileCount;j++)
+                        printf("  %s\n", dir[i].files[j]);
+                }
+                break;
+
+            case 4:
+                return 0;
+        }
+    }
+}
