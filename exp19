@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char dir[20], files[20][20];
+    int n = 0, choice;
+    char name[20];
+
+    printf("Enter directory name: ");
+    scanf("%s", dir);
+
+    while(1) {
+        printf("\n1.Create File\n2.Delete File\n3.Search File\n4.Display Files\n5.Exit\n");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1:
+                printf("Enter file name: ");
+                scanf("%s", files[n]);
+                n++;
+                break;
+
+            case 2:
+                printf("Enter file name to delete: ");
+                scanf("%s", name);
+                for(int i=0;i<n;i++){
+                    if(strcmp(files[i], name)==0){
+                        strcpy(files[i], files[n-1]);
+                        n--;
+                        printf("File deleted\n");
+                        break;
+                    }
+                }
+                break;
+
+            case 3:
+                printf("Enter file name to search: ");
+                scanf("%s", name);
+                for(int i=0;i<n;i++){
+                    if(strcmp(files[i], name)==0){
+                        printf("File found\n");
+                        break;
+                    }
+                }
+                break;
+
+            case 4:
+                printf("Files in directory %s:\n", dir);
+                for(int i=0;i<n;i++) printf("%s\n", files[i]);
+                break;
+
+            case 5:
+                return 0;
+        }
+    }
+}
