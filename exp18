@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int cmpfunc(const void *a, const void *b) { return (*(int*)a - *(int*)b); }
+
+int main() {
+    int queue[20], n, head, i, j, total = 0, disk_size, direction;
+
+    printf("Enter disk size: ");
+    scanf("%d", &disk_size);
+
+    printf("Enter number of requests: ");
+    scanf("%d", &n);
+
+    printf("Enter request queue:\n");
+    for(i = 0; i < n; i++) scanf("%d", &queue[i]);
+
+    printf("Enter head position: ");
+    scanf("%d", &head);
+
+    printf("Enter direction (1=right, 0=left): ");
+    scanf("%d", &direction);
+
+    queue[n] = head;
+    n++;
+
+    qsort(queue, n, sizeof(int), cmpfunc);
+
+    int pos;
+    for(i = 0; i < n; i++)
+        if(queue[i] == head) { pos = i; break; }
+
+    if(direction) {
+        for(i = pos; i < n-1; i++) total += abs(queue[i+1] - queue[i]);
+        total += abs(queue[n-1] - 0);
+        for(i = pos-1; i > 0; i--) total += abs(queue[i] - queue[i-1]);
+    } else {
+        for(i = pos; i > 0; i--) total += abs(queue[i] - queue[i-1]);
+        total += abs(queue[0] - (disk_size - 1));
+        for(i = pos+1; i < n-1; i++) total += abs(queue[i+1] - queue[i]);
+    }
+
+    printf("Total head movement = %d\n", total);
+    return 0;
+}
