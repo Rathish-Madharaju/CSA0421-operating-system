@@ -1,24 +1,27 @@
-#include <stdio.h>
-#include <string.h>
 
-typedef struct { int id; char name[20]; float sal; } Emp;
+#include <stdio.h>
+#include <pthread.h>
+
+int counter = 0;
+pthread_mutex_t lock;
+
+void* inc(void* arg){
+    for(int i=0;i<100000;i++){
+        pthread_mutex_lock(&lock);
+        counter++;
+        pthread_mutex_unlock(&lock);
+    }
+    return NULL;
+}
 
 int main(){
-    FILE *fp = fopen("emp.dat","wb+");
-    Emp e;
-    // write 3 employees
-    for(int i=0;i<3;i++){
-        e.id = i+1; sprintf(e.name, "Emp%d", e.id); e.sal = 1000 + i*500;
-        fwrite(&e, sizeof(Emp), 1, fp);
-    }
-    // random read: read record 2 (index 1)
-    fseek(fp, sizeof(Emp)*1, SEEK_SET);
-    fread(&e, sizeof(Emp), 1, fp);
-    printf("Read Emp: %d %s %.2f\n", e.id, e.name, e.sal);
-    // modify record 3
-    strcpy(e.name, "UpdatedEmp3"); e.sal = 9999;
-    fseek(fp, sizeof(Emp)*2, SEEK_SET);
-    fwrite(&e, sizeof(Emp), 1, fp);
-    fclose(fp);
+    pthread_t t1, t2;
+    pthread_mutex_init(&lock, NULL);
+    pthread_create(&t1, NULL, inc, NULL);
+    pthread_create(&t2, NULL, inc, NULL);
+    pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
+    printf("Counter = %d\n", counter);
+    pthread_mutex_destroy(&lock);
     return 0;
 }
