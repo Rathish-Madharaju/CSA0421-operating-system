@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <sys/stat.h>
+
+void printPerm(mode_t mode, char type[]) {
+    printf("%s: ", type);
+    printf((mode & S_IRUSR) ? "r" : "-");
+    printf((mode & S_IWUSR) ? "w" : "-");
+    printf((mode & S_IXUSR) ? "x " : "- ");
+}
+
+int main() {
+    struct stat st;
+    stat("sample.txt", &st);
+
+    printf("Permissions for sample.txt\n");
+
+    printf("Owner: ");
+    printf((st.st_mode & S_IRUSR) ? "r" : "-");
+    printf((st.st_mode & S_IWUSR) ? "w" : "-");
+    printf((st.st_mode & S_IXUSR) ? "x\n" : "-\n");
+
+    printf("Group: ");
+    printf((st.st_mode & S_IRGRP) ? "r" : "-");
+    printf((st.st_mode & S_IWGRP) ? "w" : "-");
+    printf((st.st_mode & S_IXGRP) ? "x\n" : "-\n");
+
+    printf("Others: ");
+    printf((st.st_mode & S_IROTH) ? "r" : "-");
+    printf((st.st_mode & S_IWOTH) ? "w" : "-");
+    printf((st.st_mode & S_IXOTH) ? "x\n" : "-\n");
+
+    return 0;
+}
